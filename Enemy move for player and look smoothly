@@ -1,0 +1,21 @@
+   private void EnemySearchThePlayer( CEnemy enemy, Entity entity)
+        {
+            Observable.EveryUpdate().Subscribe(_ =>
+            {
+                enemy.DistToPlayer = Vector3.Distance(enemy.transform.position, _player.transform.position);
+                if (enemy.DistToPlayer > 1 && enemy.DistToPlayer < enemy.AttentionDistance)
+                {
+                 
+                    enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, _player.transform.position, enemy.Speed * Time.deltaTime);
+
+                    Vector3 targetDirection = _player.transform.position - enemy.transform.position;
+                    Quaternion nextRotation = Quaternion.Lerp(enemy.transform.rotation, Quaternion.LookRotation(targetDirection), enemy.Speed * Time.deltaTime);
+                        enemy.transform.localRotation = nextRotation;
+                }
+
+                if (enemy.DistToPlayer <= 1)
+                {
+                   Debug.Log("Final logic");
+                }
+            }).AddToEntityDisposable(this, entity);
+        }
